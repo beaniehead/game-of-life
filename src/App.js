@@ -1,7 +1,7 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-import gridLayout from "./gridLayout";
+//import gridLayout from "./gridLayout";
 import Controls from "./Controls";
 import Grid from "./Grid";
 
