@@ -34,7 +34,7 @@
 .gridWrapper {
     display: grid;
     justify-content: center;
-    margin-top: 20px;
+    margin: 20px 20px 20px 20px;
 }
 
 .grid {
@@ -53,13 +53,13 @@
 }
 
 .cell {
-    height: 15px;
-    width: 15px;
+    height: 13px;
+    width: 13px;
     border: 1px solid black;
 }
 
 .alive-true {
-    background-color: rgba(223, 223, 32, 0.966);
+    background-color: rgb(255, 136, 0);
 }
 
 .alive-false {
@@ -67,7 +67,7 @@
 }
 
 .alive-true-old {
-    background-color: rgb(255, 136, 0);
+  background-color: rgb(255, 0, 0);
 }
 .alive-true-mature {
     background-color: rgb(255, 0, 0);
