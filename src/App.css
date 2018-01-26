@@ -4,14 +4,16 @@
 
 .App-logo {
     animation: App-logo-spin infinite 20s linear;
-    height: 80px;
+    height: 40px;
 }
 
 .App-header {
-    background-color: #222;
-    height: 150px;
-    padding: 20px;
+    background-color: #000;
+    height: 70px;
+    padding: 10px;
     color: white;
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.4em;
 }
 
 .App-title {
@@ -20,6 +22,12 @@
 
 .App-intro {
     font-size: large;
+}
+
+.main {
+    background-color: black;
+    height: 100%;
+    font-family: 'Roboto', sans-serif;
 }
 
 @keyframes App-logo-spin {
@@ -31,44 +39,188 @@
     }
 }
 
+.topInfo {
+    display: grid;
+    grid-template-rows: 50px 35px;
+    grid-template-columns: 3fr 2fr 3fr;
+    justify-content: center;
+    justify-items: stretch;
+}
+
+.topControls {
+    grid-area: 1/2/2/3;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.controlButtons {
+    flex-grow: 1;
+}
+
+.gens {
+    color: #ff0099;
+    font-size: 1.3em;
+    grid-area: 2/2/3/3;
+    margin-top:12px;
+}
+
+.buttons {
+    padding: 5px 13px 5px 13px;
+    background-color: rgba(0, 0, 0, 0);
+    border: dashed 3px white;
+    margin: 5px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.play {
+    color: #39ff14;
+}
+
+.pause {
+    color: #fffe00;
+}
+
+.reset {
+    color: red;
+}
+
+.speedControls {
+    display: grid;
+    grid-template-columns: 4fr 1fr 1fr 1fr 4fr;
+    grid-gap: 5px;
+    justify-content: center;
+    align-items: center;
+}
+
+.speed {
+    display: flex;
+    flex-flow: row no wrap;
+    justify-content: center;
+    color: #39ff14;
+    font-size: 1.1em;
+}
+
+.speed1,
+.small {
+    grid-column: 2/3;
+}
+
+.speed2,
+.medium {
+    grid-column: 3/4;
+}
+
+.speed3,
+.fast {
+    grid-column: 4/5;
+}
+
+.speed1 {
+    color: #fffe00
+}
+
+.speed3 {
+    color: white
+}
+
+.sizeControls {
+    display: grid;
+    grid-template-columns: 4fr 1fr 1fr 1fr 4fr;
+    grid-gap: 5px;
+    justify-content: center;
+    align-items: center;
+}
+
+.size {
+    font-size: 1.1em;
+}
+
+.small {
+    color: #ff6600
+}
+
+.medium {
+    color: #00f9ff
+}
+
+.large {
+    color: brown;
+}
+
 .gridWrapper {
     display: grid;
-    justify-content: center;
-    margin: 20px 20px 20px 20px;
+    justify-items: stretch;
+    margin: 20px 0 20px 0;
+    width: 100%;
+    grid-template-columns: 4fr 7fr 4fr;
 }
 
 .grid {
     display: grid;
-    border: 1px solid white;
-    justify-content: center;
+    grid-column: 2/3;
+    grid-auto-rows: 1fr;
+    height: 45vw;
+}
+
+@media (max-aspect-ratio: 1/1) {
+    .gridWrapper {
+        display: grid;
+        justify-items: stretch;
+        margin: 20px 0 20px 0;
+        width: 100%;
+        grid-template-columns: 1fr 12fr 1fr;
+    }
+    .grid {
+        display: grid;
+        grid-column: 2/3;
+        grid-auto-rows: 1fr;
+        height: 86vw;
+    }
+}
+
+@media (min-aspect-ratio: 16/10) {
+    .gridWrapper {
+        display: grid;
+        justify-items: stretch;
+        margin: 20px 0 20px 0;
+        width: 100%;
+        grid-template-columns: 4fr 5fr 4fr;
+    }
+    .grid {
+        display: grid;
+        grid-column: 2/3;
+        grid-auto-rows: 1fr;
+        height: 38vw;
+    }
 }
 
 .row {
-    display: grid;
-    grid-template-columns: repeat(50, auto);
-    justify-content: start;
-    align-content: start;
-    align-items: start;
-    justify-items: start;
+    display: flex;
+    flex-flow: row nowrap;
 }
 
 .cell {
-    height: 13px;
-    width: 13px;
-    border: 1px solid black;
+    display: flex;
+    flex-grow: 1;
+    height: 100%;
+    border: 0.5px solid rgba(38, 55, 246, 0.507);
 }
 
 .alive-true {
-    background-color: rgb(255, 136, 0);
+    background-color: #fffe00;
 }
 
 .alive-false {
-    background-color: #333;
+    background-color: #000;
 }
 
 .alive-true-old {
-  background-color: rgb(255, 0, 0);
+    background-color:  #ffc400;
 }
+
 .alive-true-mature {
     background-color: rgb(255, 0, 0);
 }

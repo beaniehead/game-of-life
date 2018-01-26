@@ -5,6 +5,7 @@ import './App.css';
 import Controls from "./Controls";
 import Grid from "./Grid";
 import SpeedControls from './SpeedControls';
+import SizeControls from './SizeControls';
 
 class App extends React.Component {
   constructor() {
@@ -12,14 +13,10 @@ class App extends React.Component {
     this.state = {
       grid: [],
       gameStatus: "paused",
-      gridSize: 35,
-      speed: 150,
+      speed: 200,
       generations: 0,
       // use to determine size of grid at start. New grid sizes stored here, but maybe different function to one in willmount, as new grid will be empty
-      gridSize: 50,
-      speed: 150
-      //use to determine size of grid at start. New grid sizes stored here, but maybe different function to one in willmount, as new grid will be empty
-      // maybe use nested loops and simple push new grid to array
+      gridSize: 40
     }
     this.editGrid = this.editGrid.bind(this);
     this.runGame = this.runGame.bind(this);
@@ -27,6 +24,7 @@ class App extends React.Component {
     this.pauseGame = this.pauseGame.bind(this);
     this.resetGame = this.resetGame.bind(this);
     this.changeSpeed = this.changeSpeed.bind(this);
+    this.changeSize = this.changeSize.bind(this);
   }
 
   componentWillMount() {
@@ -63,12 +61,14 @@ class App extends React.Component {
   }
 
   startGame() {
-    let generations = 1;
+    // console.log(this.state.generations);
+    // if (this.state.generations === 0) {
+    //   // conso
+    //   generations = 1;
+    // }
     if (this.state.gameStatus === "paused" || this.state.gameStatus === "reset") {
       const intervalID = setInterval(() => {
         this.runGame();
-        generations++;
-        this.setState({ generations });
       }, this.state.speed); // Speed
       const gameStatus = "running";
       this.setState({
@@ -113,9 +113,7 @@ class App extends React.Component {
               compareColumn = j;
             }
             // logic here for comparing all the neighbours and calculated how many are alive
-            // if (gridStatus[compareRow][compareColumn] === true || gridStatus[compareRow][compareColumn] === "true-old"||gridStatus[compareRow][compareColumn] === "true-mature") {
             if (gridStatus[compareRow][compareColumn] === true || gridStatus[compareRow][compareColumn] === "true-old") {
-              // if (gridStatus[compareRow][compareColumn] === true) {
               alive++;
             }
           }
@@ -124,7 +122,6 @@ class App extends React.Component {
         // TODO Can return on 4 in the loops as this is the max needed to calculate status
         alive = cell === true ? alive - 1 : alive;
         alive = cell === "true-old" ? alive - 1 : alive;
-        // alive = cell === "true-mature" ? alive - 1 : alive;
         // Logic for status of new cell
         // 1. Check whether current cell is alive or dead (true or false)
         // 2. If false, change to true if alive = 3
@@ -148,21 +145,27 @@ class App extends React.Component {
               done = true;
             }
           }
-
-          // if ((cell === "true-old" || cell == "true-mature") && done === false) {
-          //   if (alive <= 1 || alive >= 4) {
-          //     cell = false;
-          //     done = true;
-          //   } else {
-          //     cell = "true-mature";
-          //     done=true;
-          //   }
-          // }
           return cell;
         }
         return updateCell(cell);
       }));
-    this.setState({ grid });
+
+
+    // console.log({gridStatus});
+    // console.log({grid});
+    if (JSON.stringify(grid) === JSON.stringify(gridStatus)) {
+      clearInterval(this.state.intervalID);
+      const gameStatus = "paused";
+      this.setState({ gameStatus });
+    } else {
+      let generations = this.state.generations;
+
+      generations++;
+      this.setState({ generations });
+      this.setState({ grid });
+
+    }
+
   }
 
   pauseGame() {
@@ -174,22 +177,25 @@ class App extends React.Component {
     }
   }
 
-  resetGame() {
+  resetGame(gridSize) {
     //  function to reset the grid and stop the game
-    if (this.state.gameStatus === "running" || this.state.gameStatus === "paused") {
 
-      const gridState = [...this.state.grid];
-      const grid = gridState
-        .map(gridrow => gridrow
-          .map(cell => {
-            cell = false;
-            return cell;
-          }));
-      clearInterval(this.state.intervalID);
-      this.setState({ grid });
-      const gameStatus = "reset";
-      this.setState({ gameStatus });
+    const grid = [];
+    for (let j = 0; j < gridSize; j += 1) {
+      const newArray = Array(gridSize - 1).fill(false);
+      grid.push(newArray);
     }
+    this.setState({ grid });
+
+    clearInterval(this.state.intervalID);
+    this.setState({ grid });
+    const gameStatus = "reset";
+    const generations = 0;
+    this.setState({
+      gameStatus,
+      generations
+    });
+
   }
 
   changeSpeed(e) {
@@ -207,30 +213,40 @@ class App extends React.Component {
       // start game again with new speed set
       this.startGame
     );
+  }
 
-
+  changeSize(e) {
+    const gridSize = +e.target.dataset.value;
+    this.setState({ gridSize });
+    this.resetGame(gridSize);
   }
 
   render() {
     return (
       <div className="App">
         <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
+          {/* <img src={logo} className="App-logo" alt="logo" /> */}
           <h1 className="App-title">The Game of Life</h1>
         </header>
-        <Controls
-          gens={this.state.generations}
-          startGame={this.startGame}
-          pauseGame={this.pauseGame}
-          resetGame={this.resetGame}
-        />
-        <Grid
-          editGrid={this.editGrid}
-          grid={this.state.grid}
-        />
-        <SpeedControls
-          changeSpeed={this.changeSpeed}
-        />
+        <div className="main">
+          <Controls
+            gridSize={this.state.gridSize}
+            gens={this.state.generations}
+            startGame={this.startGame}
+            pauseGame={this.pauseGame}
+            resetGame={this.resetGame}
+          />
+          <Grid
+            editGrid={this.editGrid}
+            grid={this.state.grid}
+          />
+          <SpeedControls
+            changeSpeed={this.changeSpeed}
+          />
+          <SizeControls
+            changeSize={this.changeSize}
+          />
+        </div>
       </div>
     );
   }
