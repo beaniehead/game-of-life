@@ -60,13 +60,12 @@ class App extends React.Component {
     this.setState({ grid: newGrid });
   }
 
-  startGame() {
-    // console.log(this.state.generations);
-    // if (this.state.generations === 0) {
-    //   // conso
-    //   generations = 1;
-    // }
+  startGame(e) {
+
     if (this.state.gameStatus === "paused" || this.state.gameStatus === "reset") {
+      const control = document.querySelectorAll(".controlButtons");
+      control.forEach(button => button.classList.remove("active-button"));
+      document.querySelector(".play").classList.add("active-button");
       const intervalID = setInterval(() => {
         this.runGame();
       }, this.state.speed); // Speed
@@ -154,6 +153,9 @@ class App extends React.Component {
       clearInterval(this.state.intervalID);
       const gameStatus = "paused";
       this.setState({ gameStatus });
+      const control = document.querySelectorAll(".controlButtons");
+      control.forEach(button => button.classList.remove("active-button"));
+      document.querySelector(".pause").classList.add("active-button");
     } else {
       let generations = this.state.generations;
       generations++;
@@ -161,16 +163,24 @@ class App extends React.Component {
     }
   }
 
-  pauseGame() {
+  pauseGame(e) {
     // function to pause the game
     if (this.state.gameStatus === "running") {
+      const control = document.querySelectorAll(".controlButtons");
+      control.forEach(button => button.classList.remove("active-button"));
+      e.target.classList.add("active-button");
       clearInterval(this.state.intervalID);
       const gameStatus = "paused";
       this.setState({ gameStatus });
     }
   }
 
-  resetGame(gridSize) {
+  resetGame(gridSize, e) {
+    if (e.target.classList.contains("reset")) {
+      const control = document.querySelectorAll(".controlButtons");
+      control.forEach(button => button.classList.remove("active-button"));
+      e.target.classList.add("active-button");
+    }
     //  function to reset the grid and stop the game
     const grid = [];
     for (let j = 0; j < gridSize; j += 1) {
@@ -178,7 +188,6 @@ class App extends React.Component {
       grid.push(newArray);
     }
     this.setState({ grid });
-
     clearInterval(this.state.intervalID);
     this.setState({ grid });
     const gameStatus = "reset";
@@ -192,6 +201,9 @@ class App extends React.Component {
   changeSpeed(e) {
     // Get speed in ms from data-value tag on button
     const speed = +(e.target.dataset.value);
+    const speedButtons = document.querySelectorAll(".speed");
+    speedButtons.forEach(button => button.classList.remove("active-button"));
+    e.target.classList.add("active-button");
     // set game status to paused
     const gameStatus = "paused";
     // clearInterval on grid running
@@ -207,8 +219,11 @@ class App extends React.Component {
   }
 
   changeSize(e) {
-    console.log(e.target);
+    const speedButtons = document.querySelectorAll(".size");
+    speedButtons.forEach(button => button.classList.remove("active-button"));
+    e.target.classList.add("active-button");
     const gridSize = +e.target.dataset.value;
+
     this.setState({ gridSize });
     this.resetGame(gridSize);
   }

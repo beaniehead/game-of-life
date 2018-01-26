@@ -166,7 +166,7 @@
     height: 45vw;
 }
 
-@media (max-aspect-ratio: 1/1) {
+@media (max-aspect-ratio: 10/12) {
     .gridWrapper {
         display: grid;
         justify-items: stretch;
@@ -224,4 +224,9 @@
 
 .alive-true-mature {
     background-color: rgb(255, 0, 0);
+}
+
+
+.active-button{
+  border-color:#39ff14
 }

@@ -10,7 +10,7 @@ class SpeedControls extends React.Component {
           onClick={(e) => this.props.changeSpeed(e)}
         >Slow
         </button>
-        <button className="speed2 speed buttons" data-value="200" onClick={(e) => this.props.changeSpeed(e)}>
+        <button className="speed2 speed buttons active-button" data-value="200" onClick={(e) => this.props.changeSpeed(e)}>
         Medium
         </button>
         <button className="speed3 speed buttons" data-value="100" onClick={(e) => this.props.changeSpeed(e)}>
