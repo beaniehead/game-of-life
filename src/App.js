@@ -14,7 +14,7 @@ class App extends React.Component {
       gameStatus: "paused",
       gridSize: 35,
       speed: 150,
-      generations: 0
+      generations: 0,
       // use to determine size of grid at start. New grid sizes stored here, but maybe different function to one in willmount, as new grid will be empty
       gridSize: 50,
       speed: 150
