@@ -179,7 +179,6 @@ class App extends React.Component {
 
   resetGame(gridSize) {
     //  function to reset the grid and stop the game
-
     const grid = [];
     for (let j = 0; j < gridSize; j += 1) {
       const newArray = Array(gridSize - 1).fill(false);
@@ -195,12 +194,12 @@ class App extends React.Component {
       gameStatus,
       generations
     });
-
   }
 
   changeSpeed(e) {
     // Get speed in ms from data-value tag on button
     const speed = +(e.target.dataset.value);
+    console.log(speed);
     // set game status to paused
     const gameStatus = "paused";
     // clearInterval on grid running
@@ -216,6 +215,7 @@ class App extends React.Component {
   }
 
   changeSize(e) {
+    console.log(e.target);
     const gridSize = +e.target.dataset.value;
     this.setState({ gridSize });
     this.resetGame(gridSize);
