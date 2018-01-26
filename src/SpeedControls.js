@@ -8,11 +8,13 @@ class SpeedControls extends React.Component {
           className="speed1 speed buttons"
           data-value="500"
           onClick={(e) => this.props.changeSpeed(e)}
-        ><i className="fa fa-forward" aria-hidden="true" data-value="500" onClick={(e) => this.props.changeSpeed(e)}></i>
+        >Slow
         </button>
-        <button className="speed2 speed buttons" data-value="200" onClick={(e) => this.props.changeSpeed(e)}><i className="fa fa-forward" aria-hidden="true" data-value="200" onClick={(e) => this.props.changeSpeed(e)}></i><i className="fa fa-forward" aria-hidden="true" data-value="200" onClick={(e) => this.props.changeSpeed(e)}></i>
+        <button className="speed2 speed buttons" data-value="200" onClick={(e) => this.props.changeSpeed(e)}>
+        Medium
         </button>
-        <button className="speed3 speed buttons" data-value="100" onClick={(e) => this.props.changeSpeed(e)}><i className="fa fa-forward" aria-hidden="true" data-value="100" onClick={(e) => this.props.changeSpeed(e)}></i><i className="fa fa-forward" aria-hidden="true" data-value="100" onClick={(e) => this.props.changeSpeed(e)}></i><i className="fa fa-forward" aria-hidden="true" data-value="100" onClick={(e) => this.props.changeSpeed(e)}></i>
+        <button className="speed3 speed buttons" data-value="100" onClick={(e) => this.props.changeSpeed(e)}>
+        Fast
         </button>
       </div>
     )

@@ -150,22 +150,15 @@ class App extends React.Component {
         return updateCell(cell);
       }));
 
-
-    // console.log({gridStatus});
-    // console.log({grid});
     if (JSON.stringify(grid) === JSON.stringify(gridStatus)) {
       clearInterval(this.state.intervalID);
       const gameStatus = "paused";
       this.setState({ gameStatus });
     } else {
       let generations = this.state.generations;
-
       generations++;
-      this.setState({ generations });
-      this.setState({ grid });
-
+      this.setState({ generations, grid });
     }
-
   }
 
   pauseGame() {
@@ -199,7 +192,6 @@ class App extends React.Component {
   changeSpeed(e) {
     // Get speed in ms from data-value tag on button
     const speed = +(e.target.dataset.value);
-    console.log(speed);
     // set game status to paused
     const gameStatus = "paused";
     // clearInterval on grid running
