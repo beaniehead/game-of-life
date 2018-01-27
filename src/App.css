@@ -9,7 +9,7 @@
 
 .App-header {
     background-color: #000;
-    height: 70px;
+    height: auto;
     padding: 10px;
     color: white;
     font-family: 'Roboto', sans-serif;
@@ -24,6 +24,15 @@
     font-size: large;
 }
 
+.subtitle{
+  font-size:0.8em;
+  margin:0;
+}
+
+.subtitle a {
+  color:#7df9ff;
+  text-decoration-line: none;
+}
 .main {
     background-color: black;
     height: 100%;
@@ -63,9 +72,8 @@
     color: #ff0099;
     font-size: 1.3em;
     grid-area: 2/2/3/3;
-    margin-top:12px;
+    margin-top: 12px;
 }
-
 
 .buttons {
     padding: 5px 13px 5px 13px;
@@ -156,16 +164,16 @@
     justify-items: stretch;
     margin: 20px 0 20px 0;
     width: 100%;
-    grid-template-columns: 4fr 7fr 4fr;
+    grid-template-columns: 4fr 6fr 4fr;
 }
 
 .grid {
     display: grid;
     grid-column: 2/3;
     grid-auto-rows: 1fr;
-    height: 45vw;
+    height: 43vw;
 }
-
+/* Narrow Devices */
 @media (max-aspect-ratio: 10/12) {
     .gridWrapper {
         display: grid;
@@ -188,13 +196,13 @@
         justify-items: stretch;
         margin: 20px 0 20px 0;
         width: 100%;
-        grid-template-columns: 4fr 5fr 4fr;
+        grid-template-columns: 4fr 4fr 4fr;
     }
     .grid {
         display: grid;
         grid-column: 2/3;
         grid-auto-rows: 1fr;
-        height: 38vw;
+        height: 33vw;
     }
 }
 
@@ -219,14 +227,18 @@
 }
 
 .alive-true-old {
-    background-color:  #ffc400;
+    background-color: #ffc400;
 }
 
 .alive-true-mature {
     background-color: rgb(255, 0, 0);
 }
 
+.active-button {
+    border-color: #39ff14
+}
 
-.active-button{
-  border-color:#39ff14
+.generateGrid {
+    color: white;
+    font-size:1.1em
 }

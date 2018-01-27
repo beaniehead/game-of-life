@@ -25,9 +25,10 @@ class App extends React.Component {
     this.resetGame = this.resetGame.bind(this);
     this.changeSpeed = this.changeSpeed.bind(this);
     this.changeSize = this.changeSize.bind(this);
+    this.generateGrid = this.generateGrid.bind(this);
+    this.handleGenerate = this.handleGenerate.bind(this);
   }
-
-  componentWillMount() {
+  generateGrid() {
     const size = this.state.gridSize;
     const assign = {
       1: true,
@@ -43,6 +44,10 @@ class App extends React.Component {
       grid.push(newArray);
     }
     this.setState({ grid });
+  }
+
+  componentWillMount() {
+    this.generateGrid();
   }
 
   componentDidMount() {
@@ -176,10 +181,14 @@ class App extends React.Component {
   }
 
   resetGame(gridSize, e) {
-    // const control = document.querySelectorAll(".controlButtons");
-    // control.forEach(button => button.classList.remove("active-button"));
-    // To Do - Highlight Stopped Button if the stopped button (and only the stopped button) was pressed)
+    if (e) {
 
+      if (e.target.classList.contains("reset")) {
+        const control = document.querySelectorAll(".controlButtons");
+        control.forEach(button => button.classList.remove("active-button"));
+        e.target.classList.add("active-button");
+      }
+    }
     //  function to reset the grid and stop the game
     const grid = [];
     for (let j = 0; j < gridSize; j += 1) {
@@ -200,34 +209,46 @@ class App extends React.Component {
   changeSpeed(e) {
     // Get speed in ms from data-value tag on button
     const speed = +(e.target.dataset.value);
-    const speedButtons = document.querySelectorAll(".speed");
-    speedButtons.forEach(button => button.classList.remove("active-button"));
-    //To Do - Highlight current speed button
-
-
+    // Gets the state of the game when the change size button was clicked
+    const changeState = this.state.gameStatus;
     // set game status to paused
     const gameStatus = "paused";
     // clearInterval on grid running
     clearInterval(this.state.intervalID);
     // set speed state to new speed value, and status to paused
+
+    // Function to determine the state of the game at button press, if it was running, then continue running, if not, then stay
+    // at initial state
+    function startUp() {
+      if (changeState === "running") {
+        this.startGame();
+      }
+    }
     this.setState({
       speed,
       gameStatus
     },
-      // start game again with new speed set
-      this.startGame
+      // Return game to state at button click
+      startUp
     );
   }
 
   changeSize(e) {
-    const speedButtons = document.querySelectorAll(".size");
-    speedButtons.forEach(button => button.classList.remove("active-button"));
-    //To Do or some reason this works for the below, but not for the other buttons - try and find a different solution
-    e.target.classList.add("active-button");
+    const control = document.querySelectorAll(".controlButtons");
+    control.forEach(button => button.classList.remove("active-button"));
+    document.querySelector(".pause").classList.add("active-button");
     const gridSize = +e.target.dataset.value;
-
     this.setState({ gridSize });
     this.resetGame(gridSize);
+  }
+
+  handleGenerate(e) {
+    e.target.classList.add("active-button");
+    const button = document.querySelector(".generateGrid");
+    setTimeout(() => button.classList.remove("active-button"), 300);
+
+    this.resetGame();
+    this.generateGrid();
   }
 
   render() {
@@ -236,6 +257,7 @@ class App extends React.Component {
         <header className="App-header">
           {/* <img src={logo} className="App-logo" alt="logo" /> */}
           <h1 className="App-title">The Game of Life</h1>
+          <p className="subtitle">Find out more about Conway's game of life <a href="https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life" target="_blank">here.</a></p>
         </header>
         <div className="main">
           <Controls
@@ -255,6 +277,10 @@ class App extends React.Component {
           <SizeControls
             changeSize={this.changeSize}
           />
+          <button
+            className="generateGrid buttons"
+            onClick={(e) => this.handleGenerate(e)}
+          >Generate Random Grid</button>
         </div>
       </div>
     );
