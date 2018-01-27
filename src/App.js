@@ -168,7 +168,7 @@ class App extends React.Component {
     if (this.state.gameStatus === "running") {
       const control = document.querySelectorAll(".controlButtons");
       control.forEach(button => button.classList.remove("active-button"));
-      e.target.classList.add("active-button");
+      document.querySelector(".pause").classList.add("active-button");
       clearInterval(this.state.intervalID);
       const gameStatus = "paused";
       this.setState({ gameStatus });
@@ -176,11 +176,10 @@ class App extends React.Component {
   }
 
   resetGame(gridSize, e) {
-    if (e.target.classList.contains("reset")) {
-      const control = document.querySelectorAll(".controlButtons");
-      control.forEach(button => button.classList.remove("active-button"));
-      e.target.classList.add("active-button");
-    }
+    // const control = document.querySelectorAll(".controlButtons");
+    // control.forEach(button => button.classList.remove("active-button"));
+    // To Do - Highlight Stopped Button if the stopped button (and only the stopped button) was pressed)
+
     //  function to reset the grid and stop the game
     const grid = [];
     for (let j = 0; j < gridSize; j += 1) {
@@ -203,7 +202,9 @@ class App extends React.Component {
     const speed = +(e.target.dataset.value);
     const speedButtons = document.querySelectorAll(".speed");
     speedButtons.forEach(button => button.classList.remove("active-button"));
-    e.target.classList.add("active-button");
+    //To Do - Highlight current speed button
+
+
     // set game status to paused
     const gameStatus = "paused";
     // clearInterval on grid running
@@ -221,6 +222,7 @@ class App extends React.Component {
   changeSize(e) {
     const speedButtons = document.querySelectorAll(".size");
     speedButtons.forEach(button => button.classList.remove("active-button"));
+    //To Do or some reason this works for the below, but not for the other buttons - try and find a different solution
     e.target.classList.add("active-button");
     const gridSize = +e.target.dataset.value;
 
