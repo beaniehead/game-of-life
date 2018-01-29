@@ -21,7 +21,7 @@ const Grid = (props) => {
                   const status = gridData[row][column];
                   return (
                     <div
-                      onClick={(e) => this.props.editGrid(e)}
+                      onClick={(e) => props.editGrid(e)}
                       // Set grid status as taken from array
                       className={`cell alive-${status}`}
                       // Set ID to row and column coordinates of cell

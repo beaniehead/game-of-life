@@ -238,7 +238,11 @@
     border-color: #39ff14
 }
 
-.generateGrid {
+.generate {
     color: white;
     font-size:1.1em
+}
+.error {
+    border-color:red;
+    color:red;
 }

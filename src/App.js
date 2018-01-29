@@ -1,6 +1,7 @@
 import React from 'react';
 import './App.css';
 import Controls from "./Controls";
+import gridLayout from "./gridLayout";
 import Grid from "./Grid";
 import SpeedControls from './SpeedControls';
 import SizeControls from './SizeControls';
@@ -33,28 +34,44 @@ class App extends React.Component {
     this.handleGenerate = this.handleGenerate.bind(this);
   }
   // generate initial random grid
-  generateGrid() {
-    // Get gridSize from state
-    const size = this.state.gridSize;
-    // create object for assigning values to array values
-    const assign = {
-      1: true,
-      2: false
-    };
-    // Initialise empty grid
-    const grid = [];
-    // generate arrays
-    for (let j = 0; j < size; j += 1) {
-      const newArray = [];
-      for (let i = 0; i < size; i += 1) {
-        //generate random number between one and two and then use to select value from assign object
-        const rand = Math.floor(Math.random() * 2) + 1;
-        newArray.push(assign[rand]);
+  generateGrid(e) {
+    if (e && e.target.classList.contains("generatePattern")) {
+      const button = e.target;
+      if (this.state.gridSize === 40) {
+
+        const rand = Math.floor(Math.random() * 10) + 1;
+        const grid = gridLayout[this.state.gridSize][rand];
+        this.setState({ grid });
+      } else {
+        const grid = gridLayout[this.state.gridSize];
+        this.setState({ grid });
+        button.classList.add("error");
+        setTimeout(() =>
+          button.classList.remove("error"), 2000)
       }
-      grid.push(newArray);
+    } else {
+      // Get gridSize from state
+      const size = this.state.gridSize;
+      // create object for assigning values to array values
+      const assign = {
+        1: true,
+        2: false
+      };
+      // Initialise empty grid
+      const grid = [];
+      // generate arrays
+      for (let j = 0; j < size; j += 1) {
+        const newArray = [];
+        for (let i = 0; i < size; i += 1) {
+          //generate random number between one and two and then use to select value from assign object
+          const rand = Math.floor(Math.random() * 2) + 1;
+          newArray.push(assign[rand]);
+        }
+        grid.push(newArray);
+      }
+      // set grid state to new grid
+      this.setState({ grid });
     }
-    // set grid state to new grid
-    this.setState({ grid });
   }
   // generate grid before compononent mounts
   componentWillMount() {
@@ -225,7 +242,7 @@ class App extends React.Component {
     const grid = [];
     // resets the grid array to an array of all false values
     for (let j = 0; j < gridSize; j += 1) {
-      const newArray = Array(gridSize - 1).fill(false);
+      const newArray = Array(gridSize).fill(false);
       grid.push(newArray);
     }
     // Sets state.grid to new grid 
@@ -287,12 +304,12 @@ class App extends React.Component {
     //function to generate random grid on button press
     // highlight button on press and then remove highlight
     e.target.classList.add("active-button");
-    const button = document.querySelector(".generateGrid");
-    setTimeout(() => button.classList.remove("active-button"), 300);
+    const buttons = document.querySelectorAll(".generate");
+    setTimeout(() => buttons.forEach(button => button.classList.remove("active-button")), 300);
     // reset game 
     this.resetGame();
     // generate a new random grid that will match current grid size
-    this.generateGrid();
+    this.generateGrid(e);
   }
 
   render() {
@@ -321,9 +338,15 @@ class App extends React.Component {
             changeSize={this.changeSize}
           />
           <button
-            className="generateGrid buttons"
+            className="generateGrid generate buttons"
             onClick={(e) => this.handleGenerate(e)}
-          >Generate Random Grid</button>
+          >Generate Random Grid
+          </button>
+          <button
+            className="generatePattern generate buttons"
+            onClick={(e) => this.handleGenerate(e)}
+          >Load Pattern
+          </button>
         </div>
       </div>
     );
