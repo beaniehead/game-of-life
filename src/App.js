@@ -1,7 +1,5 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
-//import gridLayout from "./gridLayout";
 import Controls from "./Controls";
 import Grid from "./Grid";
 import SpeedControls from './SpeedControls';
@@ -10,14 +8,20 @@ import SizeControls from './SizeControls';
 class App extends React.Component {
   constructor() {
     super();
+    // Set initial state
     this.state = {
+      //Initialise grid as empty array
       grid: [],
+      //Game is initially paused
       gameStatus: "paused",
+      // Speed in ms
       speed: 200,
+      // Number of generations
       generations: 0,
       // use to determine size of grid at start. New grid sizes stored here, but maybe different function to one in willmount, as new grid will be empty
       gridSize: 40
     }
+    // Bind functions
     this.editGrid = this.editGrid.bind(this);
     this.runGame = this.runGame.bind(this);
     this.startGame = this.startGame.bind(this);
@@ -28,32 +32,42 @@ class App extends React.Component {
     this.generateGrid = this.generateGrid.bind(this);
     this.handleGenerate = this.handleGenerate.bind(this);
   }
+  // generate initial random grid
   generateGrid() {
+    // Get gridSize from state
     const size = this.state.gridSize;
+    // create object for assigning values to array values
     const assign = {
       1: true,
       2: false
     };
+    // Initialise empty grid
     const grid = [];
+    // generate arrays
     for (let j = 0; j < size; j += 1) {
       const newArray = [];
       for (let i = 0; i < size; i += 1) {
+        //generate random number between one and two and then use to select value from assign object
         const rand = Math.floor(Math.random() * 2) + 1;
         newArray.push(assign[rand]);
       }
       grid.push(newArray);
     }
+    // set grid state to new grid
     this.setState({ grid });
   }
-
+  // generate grid before compononent mounts
   componentWillMount() {
     this.generateGrid();
   }
-
+  // start game once component has rendered
   componentDidMount() {
     setTimeout(this.startGame, 1000);
   }
+
+  // editGrid function
   editGrid(e) {
+    // Get current row and column from clicked element's ID
     const coord = e.target.id.split("-");
     const row = +coord[0];
     const column = +coord[1];
@@ -65,16 +79,23 @@ class App extends React.Component {
     this.setState({ grid: newGrid });
   }
 
+  // Start game function
   startGame(e) {
-
+    // If the game is paused or reset, then run function
     if (this.state.gameStatus === "paused" || this.state.gameStatus === "reset") {
+      // Get the main control buttons
       const control = document.querySelectorAll(".controlButtons");
+      // Remove active-button class to remove highlight from all control buttons
       control.forEach(button => button.classList.remove("active-button"));
+      // Add active-button class to play button so it is highlighted
       document.querySelector(".play").classList.add("active-button");
+      // Run game with interval, interval determined by state.speed
       const intervalID = setInterval(() => {
         this.runGame();
       }, this.state.speed); // Speed
+      //Update game status to running
       const gameStatus = "running";
+      // Set gameStatus and Interval ID state. Interval ID state is so game can be paused
       this.setState({
         intervalID,
         gameStatus
@@ -92,11 +113,14 @@ class App extends React.Component {
       gridRow.map((cell, index) => {
         const row = gridStatus.indexOf(gridRow);
         const column = index;
-        // Need to get status of neighbours.
+        // Get status of neighbours.
         // Row -1: col-1, col=, col+1
         // Row  =: col-1, col+1
         // Row +1: col-1, col=, col+1
+        //Set alive to 0, to count number of alive neighbours
         let alive = 0;
+
+        // Run through all neighbours to get compare rows, as the grid loops round, the first and last rows need to count as nieghbours
         for (let i = row - 1; i <= row + 1; i++) {
           let compareRow;
           if (i < 0) {
@@ -118,50 +142,59 @@ class App extends React.Component {
             }
             // logic here for comparing all the neighbours and calculated how many are alive
             if (gridStatus[compareRow][compareColumn] === true || gridStatus[compareRow][compareColumn] === "true-old") {
+              //If a neighbouring cell's array value is true, then incremement the alive value
               alive++;
             }
           }
         }
         // Above loops calculate all cells, including current cell, so - one from total alive to see how many neighbouring cells are alive
-        // TODO Can return on 4 in the loops as this is the max needed to calculate status
         alive = cell === true ? alive - 1 : alive;
         alive = cell === "true-old" ? alive - 1 : alive;
         // Logic for status of new cell
         // 1. Check whether current cell is alive or dead (true or false)
         // 2. If false, change to true if alive = 3
         function updateCell(cell) {
+          // use done to stop function when neighbour status is determined
           let done = false;
+          // If current cell is dead
           if (cell === false && done === false) {
+            // If alive neighbours totals 3
             if (alive === 3) {
+              //Set current cell to 3
               cell = true;
+              // Assign done to true to skip below if statements
               done = true;
             }
           }
-          // 3. If true
+          // If current cell is alive (either simply true or true-old, which means it is older than one generation)
           if ((cell === true || cell === "true-old") && done === false) {
-            // if ((cell === true) && done === false) {
+            // If total of alive neighbours is <= 1 or >=4 then the current cell dies
             if (alive <= 1 || alive >= 4) {
               cell = false;
               done = true;
-            }
-            else {
+            } else {
+              //the current cell stays alive and has a state of true-old, indicating it is more than one generation old
               cell = "true-old";
               done = true;
             }
           }
+          //return cell value
           return cell;
         }
+        //run updateCell function
         return updateCell(cell);
       }));
-
+    // Stop the game running if the current grid and the new caculated grid are the same
     if (JSON.stringify(grid) === JSON.stringify(gridStatus)) {
       clearInterval(this.state.intervalID);
       const gameStatus = "paused";
       this.setState({ gameStatus });
+      // highlight the pause button and remove highlight from start button
       const control = document.querySelectorAll(".controlButtons");
       control.forEach(button => button.classList.remove("active-button"));
       document.querySelector(".pause").classList.add("active-button");
     } else {
+      // update the new grid and increase the number of generations by 1
       let generations = this.state.generations;
       generations++;
       this.setState({ generations, grid });
@@ -169,11 +202,13 @@ class App extends React.Component {
   }
 
   pauseGame(e) {
-    // function to pause the game
+    // function to pause the game if the game is running
     if (this.state.gameStatus === "running") {
+      // update class of control buttons to control highlighting
       const control = document.querySelectorAll(".controlButtons");
       control.forEach(button => button.classList.remove("active-button"));
       document.querySelector(".pause").classList.add("active-button");
+      // clearInterval to pause game and update state.gameState
       clearInterval(this.state.intervalID);
       const gameStatus = "paused";
       this.setState({ gameStatus });
@@ -181,24 +216,25 @@ class App extends React.Component {
   }
 
   resetGame(gridSize, e) {
-    if (e) {
-
-      if (e.target.classList.contains("reset")) {
-        const control = document.querySelectorAll(".controlButtons");
-        control.forEach(button => button.classList.remove("active-button"));
-        e.target.classList.add("active-button");
-      }
-    }
+    // function to reset game
+    // reset button highlight on game reset or grid size change
+    const control = document.querySelectorAll(".controlButtons");
+    control.forEach(button => button.classList.remove("active-button"));
+    document.querySelector(".reset").classList.add("active-button");
     //  function to reset the grid and stop the game
     const grid = [];
+    // resets the grid array to an array of all false values
     for (let j = 0; j < gridSize; j += 1) {
       const newArray = Array(gridSize - 1).fill(false);
       grid.push(newArray);
     }
+    // Sets state.grid to new grid 
     this.setState({ grid });
+    // stops current game
     clearInterval(this.state.intervalID);
-    this.setState({ grid });
+    // sets game status to reset
     const gameStatus = "reset";
+    // resets generation count and updates state
     const generations = 0;
     this.setState({
       gameStatus,
@@ -234,20 +270,28 @@ class App extends React.Component {
   }
 
   changeSize(e) {
+    // highlight current clicked speed button only
     const control = document.querySelectorAll(".controlButtons");
     control.forEach(button => button.classList.remove("active-button"));
     document.querySelector(".pause").classList.add("active-button");
+    // set gridsize to value of current clicked button
     const gridSize = +e.target.dataset.value;
+    // update state.gridSize to new size
     this.setState({ gridSize });
+    // reset game and generate blank grid of new size
     this.resetGame(gridSize);
   }
 
+
   handleGenerate(e) {
+    //function to generate random grid on button press
+    // highlight button on press and then remove highlight
     e.target.classList.add("active-button");
     const button = document.querySelector(".generateGrid");
     setTimeout(() => button.classList.remove("active-button"), 300);
-
+    // reset game 
     this.resetGame();
+    // generate a new random grid that will match current grid size
     this.generateGrid();
   }
 
@@ -255,9 +299,8 @@ class App extends React.Component {
     return (
       <div className="App">
         <header className="App-header">
-          {/* <img src={logo} className="App-logo" alt="logo" /> */}
           <h1 className="App-title">The Game of Life</h1>
-          <p className="subtitle">Find out more about Conway's game of life <a href="https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life" target="_blank">here.</a></p>
+          <p className="subtitle">Find out more about Conway's game of life <a href="https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life" target="_blank" rel="noopener noreferrer">here.</a></p>
         </header>
         <div className="main">
           <Controls

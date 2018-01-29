@@ -1,5 +1,6 @@
 import React from 'react';
 
+//main controls
 class Controls extends React.Component {
 
   render() {
