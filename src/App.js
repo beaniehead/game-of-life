@@ -33,22 +33,14 @@ class App extends React.Component {
     this.generateGrid = this.generateGrid.bind(this);
     this.handleGenerate = this.handleGenerate.bind(this);
   }
-  // generate initial random grid
+  // generate initial random grid or predertimened patterns
   generateGrid(e) {
+    // randomly load pre-set patterns based on grid size if load pattern button clicked
     if (e && e.target.classList.contains("generatePattern")) {
-      const button = e.target;
-      if (this.state.gridSize === 40) {
-
-        const rand = Math.floor(Math.random() * 10) + 1;
-        const grid = gridLayout[this.state.gridSize][rand];
-        this.setState({ grid });
-      } else {
-        const grid = gridLayout[this.state.gridSize];
-        this.setState({ grid });
-        button.classList.add("error");
-        setTimeout(() =>
-          button.classList.remove("error"), 2000)
-      }
+      const rand = Math.floor(Math.random() * 10) + 1;
+      const grid = gridLayout[this.state.gridSize][rand];
+      console.log(rand);
+      this.setState({ grid });
     } else {
       // Get gridSize from state
       const size = this.state.gridSize;
